@@ -1,0 +1,11 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "mode": "Incremental", 
+    "parameters": { 
+      "farmName": { "value": "tuxedo-node-farm" }, 
+      "appName": { "value": "joshgav-tuxedo-app-01" }, 
+      "githubRepo" : { "value": "joshgav/node-scratch" },
+      "githubBranch" : { "value" : "master" }
+    } 
+}

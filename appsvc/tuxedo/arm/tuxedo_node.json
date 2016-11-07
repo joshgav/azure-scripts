@@ -1,0 +1,69 @@
+{ 
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#", 
+  "contentVersion": "1.0.0.0", 
+  "parameters": { 
+    "farmName"      : { "type":"string" }, 
+    "appName"       : { "type":"string" }, 
+    "githubRepo"    : { "type":"string" },
+    "githubBranch"  : { "type":"string" }
+  }, 
+  "resources": [
+    { 
+      "apiVersion": "2015-05-01", 
+      "name": "[parameters('farmName')]", 
+      "type": "Microsoft.Web/serverfarms", 
+      "location": "West US", 
+      "tags": null, 
+      "properties": { 
+        "maximumNumberOfWorkers": 1, 
+        "geoRegion": "West US", 
+        "reserved": true, 
+        "planName": "VirtualDedicatedPlan" 
+      }, 
+      "sku": { 
+        "name": "S1", 
+        "tier": "Standard", 
+        "size": "S1", 
+        "family": "S", 
+        "capacity": 1 
+      } 
+    }, 
+    { 
+      "apiVersion": "2015-05-01", 
+      "name": "[parameters('appName')]", 
+      "type": "Microsoft.Web/sites", 
+      "location": "West US", 
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('farmName'))]"
+      ], 
+      "properties": { 
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('farmName'))]",
+        "resources": [
+          {
+            "name": "web",
+            "type": "config",
+            "dependsOn": [
+              "[resourceId('Microsoft.Web/sites', parameters('appName'))]"
+            ],
+            "properties": { 
+              "nodeVersion" : "6.6.0",
+              "appCommandLine": "index.js"
+            } 
+          },
+          {
+            "name": "web",
+            "type": "sourcecontrols",
+            "dependsOn": [
+              "[resourceId('Microsoft.Web/sites', parameters('appName'))]"
+            ],
+            "properties" : {
+              "repoUrl": "[concat('https://github.com/', parameters('githubRepo'))]",
+              "branch": "[parameters('githubBranch')]",
+              "isManualIntegration": false
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,269 @@
+Usage: lt-mesos-master [options]
+
+  --acls=VALUE                             The value could be a JSON-formatted string of ACLs
+                                           or a file path containing the JSON-formatted ACLs used
+                                           for authorization. Path could be of the form 'file:///path/to/file'
+                                           or '/path/to/file'.
+                                           
+                                           Note that if the flag --authorizers is provided with a value different
+                                           than 'local', the ACLs contents will be ignored.
+                                           
+                                           See the ACLs protobuf in mesos.proto for the expected format.
+                                           
+                                           Example:
+                                           {
+                                             "register_frameworks": [
+                                                                  {
+                                                                     "principals": { "type": "ANY" },
+                                                                     "roles": { "values": ["a"] }
+                                                                  }
+                                                                ],
+                                             "run_tasks": [
+                                                             {
+                                                                "principals": { "values": ["a", "b"] },
+                                                                "users": { "values": ["c"] }
+                                                             }
+                                                           ],
+                                             "shutdown_frameworks": [
+                                                           {
+                                                              "principals": { "values": ["a", "b"] },
+                                                              "framework_principals": { "values": ["c"] }
+                                                           }
+                                                         ]
+                                           }
+  --advertise_ip=VALUE                     IP address advertised to reach mesos master.
+                                           Mesos master does not bind using this IP address.
+                                           However, this IP address may be used to access Mesos master.
+  --advertise_port=VALUE                   Port advertised to reach mesos master (alongwith advertise_ip).
+                                           Mesos master does not bind using this port.
+                                           However, this port (alongwith advertise_ip) may be used to
+                                           access Mesos master.
+  --allocation_interval=VALUE              Amount of time to wait between performing
+                                            (batch) allocations (e.g., 500ms, 1sec, etc). (default: 1secs)
+  --allocator=VALUE                        Allocator to use for resource allocation to frameworks.
+                                           Use the default 'HierarchicalDRF' allocator, or
+                                           load an alternate allocator module using --modules. (default: HierarchicalDRF)
+  --[no-]authenticate                      If authenticate is 'true' only authenticated frameworks are allowed
+                                           to register. If 'false' unauthenticated frameworks are also
+                                           allowed to register. (default: false)
+  --[no-]authenticate_slaves               If 'true' only authenticated slaves are allowed to register.
+                                           If 'false' unauthenticated slaves are also allowed to register. (default: false)
+  --authenticators=VALUE                   Authenticator implementation to use when authenticating frameworks
+                                           and/or slaves. Use the default 'crammd5', or
+                                           load an alternate authenticator module using --modules. (default: crammd5)
+  --authorizers=VALUE                      Authorizer implementation to use when authorizating actions that
+                                           required it.
+                                           Use the default 'local', or
+                                           load an alternate authorizer module using --modules.
+                                           
+                                           Note that if the flag --authorizers is provided with a value different
+                                           than the default 'local', the ACLs passed
+                                           through the --acls flag will be ignored.
+                                           
+                                           Currently there's no support for multiple authorizers. (default: local)
+  --cluster=VALUE                          Human readable name for the cluster,
+                                           displayed in the webui.
+  --credentials=VALUE                      Either a path to a text file with a list of credentials,
+                                           each line containing 'principal' and 'secret' separated by whitespace,
+                                           or, a path to a JSON-formatted file containing credentials.
+                                           Path could be of the form 'file:///path/to/file' or '/path/to/file'.
+                                           JSON file Example:
+                                           {
+                                             "credentials": [
+                                                               {
+                                                                  "principal": "sherman",
+                                                                  "secret": "kitesurf",
+                                                               }
+                                                              ]
+                                           }
+                                           Text file Example:
+                                           username secret
+  --external_log_file=VALUE                Specified the externally managed log file. This file will be
+                                           exposed in the webui and HTTP api. This is useful when using
+                                           stderr logging as the log file is otherwise unknown to Mesos.
+  --firewall_rules=VALUE                   The value could be a JSON-formatted string of rules or a
+                                           file path containing the JSON-formatted rules used in the endpoints
+                                           firewall. Path must be of the form 'file:///path/to/file'
+                                           or '/path/to/file'.
+                                           
+                                           See the Firewall message in flags.proto for the expected format.
+                                           
+                                           Example:
+                                           {
+                                             "disabled_endpoints" : {
+                                               "paths" : [
+                                                 "/files/browse",
+                                                 "/slave(0)/stats.json",
+                                               ]
+                                             }
+                                           }
+  --framework_sorter=VALUE                 Policy to use for allocating resources
+                                           between a given user's frameworks. Options
+                                           are the same as for user_allocator. (default: drf)
+  --[no-]help                              Prints this help message (default: false)
+  --hooks=VALUE                            A comma-separated list of hook modules to be
+                                           installed inside master.
+  --hostname=VALUE                         The hostname the master should advertise in ZooKeeper.
+                                           If left unset, the hostname is resolved from the IP address
+                                           that the slave binds to; unless the user explicitly prevents
+                                           that, using --no-hostname_lookup, in which case the IP itself
+                                           is used.
+  --[no-]hostname_lookup                   Whether we should execute a lookup to find out the server's hostname,
+                                           if not explicitly set (via, e.g., `--hostname`).
+                                           True by default; if set to 'false' it will cause Mesos
+                                           to use the IP address, unless the hostname is explicitly set. (default: true)
+  --[no-]initialize_driver_logging         Whether to automatically initialize Google logging of scheduler
+                                           and/or executor drivers. (default: true)
+  --ip=VALUE                               IP address to listen on
+  --ip_discovery_command=VALUE             Optional IP discovery binary: if set, it is expected to emit
+                                           the IP address which Master will try to bind to.
+                                           Cannot be used in conjunction with --ip.
+  --[no-]log_auto_initialize               Whether to automatically initialize the replicated log used for the
+                                           registry. If this is set to false, the log has to be manually
+                                           initialized when used for the very first time. (default: true)
+  --log_dir=VALUE                          Directory path to put log files (no default, nothing
+                                           is written to disk unless specified;
+                                           does not affect logging to stderr).
+                                           NOTE: 3rd party log messages (e.g. ZooKeeper) are
+                                           only written to stderr!
+  --logbufsecs=VALUE                       How many seconds to buffer log messages for (default: 0)
+  --logging_level=VALUE                    Log message at or above this level; possible values: 
+                                           'INFO', 'WARNING', 'ERROR'; if quiet flag is used, this 
+                                           will affect just the logs from log_dir (if specified) (default: INFO)
+  --max_slave_ping_timeouts=VALUE          The number of times a slave can fail to respond to a
+                                           ping from the master. Slaves that do not respond within
+                                           max_slave_ping_timeouts ping retries will be asked to shutdown.
+                                           (default: 5)
+  --modules=VALUE                          List of modules to be loaded and be available to the internal
+                                           subsystems.
+                                           
+                                           Use --modules=filepath to specify the list of modules via a
+                                           file containing a JSON-formatted string. 'filepath' can be
+                                           of the form 'file:///path/to/file' or '/path/to/file'.
+                                           
+                                           Use --modules="{...}" to specify the list of modules inline.
+                                           
+                                           Example:
+                                           {
+                                             "libraries": [
+                                               {
+                                                 "file": "/path/to/libfoo.so",
+                                                 "modules": [
+                                                   {
+                                                     "name": "org_apache_mesos_bar",
+                                                     "parameters": [
+                                                       {
+                                                         "key": "X",
+                                                         "value": "Y"
+                                                       }
+                                                     ]
+                                                   },
+                                                   {
+                                                     "name": "org_apache_mesos_baz"
+                                                   }
+                                                 ]
+                                               },
+                                               {
+                                                 "name": "qux",
+                                                 "modules": [
+                                                   {
+                                                     "name": "org_apache_mesos_norf"
+                                                   }
+                                                 ]
+                                               }
+                                             ]
+                                           }
+  --offer_timeout=VALUE                    Duration of time before an offer is rescinded from a framework.
+                                           This helps fairness when running frameworks that hold on to offers,
+                                           or frameworks that accidentally drop offers.
+  --port=VALUE                             Port to listen on (default: 5050)
+  --[no-]quiet                             Disable logging to stderr (default: false)
+  --quorum=VALUE                           The size of the quorum of replicas when using 'replicated_log' based
+                                           registry. It is imperative to set this value to be a majority of
+                                           masters i.e., quorum > (number of masters)/2.
+  --rate_limits=VALUE                      The value could be a JSON-formatted string of rate limits
+                                           or a file path containing the JSON-formatted rate limits used
+                                           for framework rate limiting.
+                                           Path could be of the form 'file:///path/to/file'
+                                           or '/path/to/file'.
+                                           
+                                           See the RateLimits protobuf in mesos.proto for the expected format.
+                                           
+                                           Example:
+                                           {
+                                             "limits": [
+                                               {
+                                                 "principal": "foo",
+                                                 "qps": 55.5
+                                               },
+                                               {
+                                                 "principal": "bar"
+                                               }
+                                             ],
+                                             "aggregate_default_qps": 33.3
+                                           }
+  --recovery_slave_removal_limit=VALUE     For failovers, limit on the percentage of slaves that can be removed
+                                           from the registry *and* shutdown after the re-registration timeout
+                                           elapses. If the limit is exceeded, the master will fail over rather
+                                           than remove the slaves.
+                                           This can be used to provide safety guarantees for production
+                                           environments. Production environments may expect that across Master
+                                           failovers, at most a certain percentage of slaves will fail
+                                           permanently (e.g. due to rack-level failures).
+                                           Setting this limit would ensure that a human needs to get
+                                           involved should an unexpected widespread failure of slaves occur
+                                           in the cluster.
+                                           Values: [0%-100%] (default: 100%)
+  --registry=VALUE                         Persistence strategy for the registry;
+                                           available options are 'replicated_log', 'in_memory' (for testing). (default: replicated_log)
+  --registry_fetch_timeout=VALUE           Duration of time to wait in order to fetch data from the registry
+                                           after which the operation is considered a failure. (default: 1mins)
+  --registry_store_timeout=VALUE           Duration of time to wait in order to store data in the registry
+                                           after which the operation is considered a failure. (default: 5secs)
+  --[no-]registry_strict                   Whether the Master will take actions based on the persistent
+                                           information stored in the Registry. Setting this to false means
+                                           that the Registrar will never reject the admission, readmission,
+                                           or removal of a slave. Consequently, 'false' can be used to
+                                           bootstrap the persistent state on a running cluster.
+                                           NOTE: This flag is *experimental* and should not be used in
+                                           production yet. (default: false)
+  --roles=VALUE                            A comma-separated list of the allocation
+                                           roles that frameworks in this cluster may
+                                           belong to.
+  --[no-]root_submissions                  Can root submit frameworks? (default: true)
+  --slave_ping_timeout=VALUE               The timeout within which each slave is expected to respond to a
+                                           ping from the master. Slaves that do not respond within
+                                           max_slave_ping_timeouts ping retries will be asked to shutdown.
+                                           NOTE: The total ping timeout (slave_ping_timeout multiplied by
+                                           max_slave_ping_timeouts) should be greater than the ZooKeeper
+                                           session timeout to prevent useless re-registration attempts.
+                                           (default: 15secs)
+  --slave_removal_rate_limit=VALUE         The maximum rate (e.g., 1/10mins, 2/3hrs, etc) at which slaves will
+                                           be removed from the master when they fail health checks. By default
+                                           slaves will be removed as soon as they fail the health checks.
+                                           The value is of the form <Number of slaves>/<Duration>.
+  --slave_reregister_timeout=VALUE         The timeout within which all slaves are expected to re-register
+                                           when a new master is elected as the leader. Slaves that do not
+                                           re-register within the timeout will be removed from the registry
+                                           and will be shutdown if they attempt to communicate with master.
+                                           NOTE: This value has to be atleast 10mins. (default: 10mins)
+  --user_sorter=VALUE                      Policy to use for allocating resources
+                                           between users. May be one of:
+                                             dominant_resource_fairness (drf) (default: drf)
+  --[no-]version                           Show version and exit. (default: false)
+  --webui_dir=VALUE                        Directory path of the webui files/assets (default: /usr/local/share/mesos/webui)
+  --weights=VALUE                          A comma-separated list of role/weight pairs
+                                           of the form 'role=weight,role=weight'. Weights
+                                           are used to indicate forms of priority.
+  --whitelist=VALUE                        Path to a file with a list of slaves
+                                           (one per line) to advertise offers for.
+                                           Path could be of the form 'file:///path/to/file' or '/path/to/file'.
+  --work_dir=VALUE                         Directory path to store the persistent information stored in the 
+                                           Registry. (example: /var/lib/mesos/master)
+  --zk=VALUE                               ZooKeeper URL (used for leader election amongst masters)
+                                           May be one of:
+                                             zk://host1:port1,host2:port2,.../path
+                                             zk://username:password@host1:port1,host2:port2,.../path
+                                             file:///path/to/file (where file contains one of the above)
+  --zk_session_timeout=VALUE               ZooKeeper session timeout. (default: 10secs)
+
