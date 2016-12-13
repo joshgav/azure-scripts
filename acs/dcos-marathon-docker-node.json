@@ -1,0 +1,29 @@
+{
+  "id": "/node-scratch",
+  "cmd": "node --inspect ./bootstrap.js",
+  "cpus": 0.25,
+  "mem": 64.0,
+  "instances": 3,
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "joshgav/node-scratch:latest",
+      "forcePullImage": true,
+      "network": "BRIDGE",
+      "portMappings": [
+        { "containerPort": 0, "hostPort": 0, "servicePort": 10000 },
+        { "containerPort": 9229, "hostPort": 0, "servicePort": 10001 }
+      ]
+    }
+  },
+  "env": {
+    "APPINSIGHTS_INSTRUMENTATIONKEY": "c2509a86-0b75-4e78-82c0-1d567b4c2406"
+  },
+  "labels": {
+    "HAPROXY_GROUP": "external",
+    "HAPROXY_0_VHOST": "joshgav-acs-node2agents.westus.cloudapp.azure.com",
+    "HAPROXY_0_MODE": "http",
+    "HAPROXY_1_MODE": "tcp"
+  }
+}
+
