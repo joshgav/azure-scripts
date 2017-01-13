@@ -23,7 +23,8 @@
     "HAPROXY_GROUP": "external",
     "HAPROXY_0_VHOST": "joshgav-acs-node2agents.westus.cloudapp.azure.com",
     "HAPROXY_0_MODE": "http",
-    "HAPROXY_1_MODE": "tcp"
+    "HAPROXY_1_MODE": "tcp",
+    "HAPROXY_1_STICKY": "true"
   }
 }
 

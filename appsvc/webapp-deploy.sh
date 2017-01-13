@@ -1,17 +1,17 @@
 #!/usr/bin/env sh
 
-export AZURE_RG_NAME="rg-tuxedo-node"
+export AZURE_RG_NAME="rg-appsvc-node3"
 export AZURE_RG_LOCATION="westus"
-export AZURE_APPSVC_PLAN_NAME="joshgav-tuxedo-node-farm"
-export AZURE_APPSVC_WEB_NAME="joshgav-tuxedo-node-web"
+export AZURE_APPSVC_PLAN_NAME="joshgav-appsvc-node3-plan"
+export AZURE_APPSVC_WEB_NAME="joshgav-appsvc-node3-web"
 
 export AZURE_NODE_VERSION="6.6.0"
-export AZURE_NODE_MAIN="index.js"
+export AZURE_NODE_MAIN="bootstrap.js"
 
 export GIT_REPO_URL="https://github.com/joshgav/node-scratch"
 export GIT_BRANCH="master"
 
-az resource group create \
+az group create \
   --name ${AZURE_RG_NAME} \
   --location ${AZURE_RG_LOCATION} \
 

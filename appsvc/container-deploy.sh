@@ -7,9 +7,9 @@ export AZURE_APPSVC_WEB_NAME="joshgav-container-node1-web"
 
 # best practice would be to automatically build and push
 # an updated image, and sync the tag/ver# in the build and here.
-export DOCKER_HUB_IMAGE_NAME="joshgav/node-scratch:0.0.1"
+export DOCKER_HUB_IMAGE_NAME="joshgav/node-scratch:latest"
 
-az resource group create \
+az group create \
   --name ${AZURE_RG_NAME} \
   --location ${AZURE_RG_LOCATION} \
 

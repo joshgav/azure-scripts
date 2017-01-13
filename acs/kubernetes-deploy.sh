@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-export AZURE_ACS_ORCHESTRATOR_TYPE="DCOS"
+export AZURE_ACS_ORCHESTRATOR_TYPE="Kubernetes"
+export AZURE_ACS_SERVICE_PRINCIPAL=""
+# AZURE_ACS_CLIENT_SECRET should be set in shell env
 
 SCRIPT_DIR=$(dirname $(realpath ${BASH_SOURCE[0]}))
 
@@ -24,7 +26,4 @@ az acs create \
   --location ${AZURE_RG_LOCATION} \
   --orchestrator-type ${AZURE_ACS_ORCHESTRATOR_TYPE} \
   --ssh-key-value ${AZURE_SSH_KEY_PATH}
-  
-${SCRIPT_DIR}/dcos-marathon-app-setup.sh
-# ${SCRIPT_DIR}/dcos-open-port.sh
 
